@@ -22,6 +22,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+//variable1 declaration
+extern int variable1;
+
+//Function1(int a) definition
+extern int Function1(int a); //or: int Function1(int a); [Without using extern]
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,7 +89,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-
+  Function1(variable1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
