@@ -21,13 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
-//variable1 declaration
-extern int variable1;
-
-//Function1(int a) definition
-extern int Function1(int a); //or: int Function1(int a); [Without using extern]
-
+#include "Variables.h"
+#include "Functions.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
