@@ -43,7 +43,6 @@ void TestPointers(void)
 	//Passing the output variable as reference & getting validation: passing without errors
 	status = CalculateSumOfValuesWithValidation(arrayOfNumbers,10,&var16Bit);
 
-
 	//Swapping the byte order of a 32-bit value to Big-Endian
 	var32Bit = 0x1A46589D;
 	var32Bit = SwapByteOrderUint32_t(var32Bit);
@@ -55,12 +54,12 @@ void TestPointers(void)
 
 	//Representing a float value in a 32bit:
 	varFloat = 1099511627775;
-	status = WriteFloatAs32Bit((uint8_t*)&var32Bit, varFloat);
+	status = WriteFloatAs32Bit((uint8_t*)&var32Bit,varFloat);
 
 	//Reading a 32bit value as float: (the value is 1099511627775)
 	varFloat = var32Bit; //Error
-	varFloat = (float)var32Bit;
-	varFloat = Read32BitAsFloat((uint8_t*)&var32Bit, &varFloat);
+	varFloat = (float)var32Bit;//Error
+	status = Read32BitAsFloat((uint8_t*)&var32Bit, &varFloat);
 }
 
 //-------------------------------------------------------
@@ -96,7 +95,7 @@ uint16_t CalculateSumOfValues(uint8_t* pData, uint8_t length)
 uint8_t CalculateSumOfValuesWithValidation(uint8_t* pData, uint8_t length, uint16_t* sum)
 {
 	if(sum == NULL || pData == NULL)
-		return 0;
+		return 1;
 
 	uint16_t value = 0;
 	for(uint8_t i = 0;i<length;i++)
@@ -105,7 +104,7 @@ uint8_t CalculateSumOfValuesWithValidation(uint8_t* pData, uint8_t length, uint1
 		//Or: value += *(pData + i);
 	}
 	*sum = value;
-	return 1;
+	return 0;
 }
 
 //-------------------------------------------------------
@@ -115,7 +114,8 @@ uint32_t SwapByteOrderUint32_t(uint32_t value)
 	uint8_t temp[4] = {0};
 	for(uint8_t i = 0;i<4;i++)
 	{
-		temp[3-i] = (*ptr)++;
+		temp[3-i] = *ptr;
+		ptr++;
 	}
 	return (*(uint32_t*)&temp);
 }
@@ -142,9 +142,10 @@ uint8_t ReadMessage(uint8_t messageId, uint8_t* pData, uint8_t* messageLength)
 			pData++; *pData = '_';
 			pData++; *pData = '2';
 			*messageLength = 5;
+			break;
 
 		default:
-			*messageLength = 5;
+			*messageLength = 0;
 			break;
 
 	}
@@ -173,10 +174,17 @@ uint8_t WriteFloatAs32Bit(uint8_t* pData, float value)
 //-------------------------------------------------------
 uint8_t Read32BitAsFloat(uint8_t* pData, float* value)
 {
+	uint8_t temp[4] = {0};
 	if(pData == NULL || value == NULL)
 		return 1;
 
-	*value = (float)(*pData | (*(pData + 1)<<8) | (*(pData + 2)<<16) | (*(pData + 3) << 24));
+	for(uint8_t i =0;i<4;i++)
+	{
+		temp[i] = *pData;
+		pData++;
+	}
+
+	*value = *((float*)temp);
 
 	return 0;
 }
