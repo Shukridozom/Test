@@ -17,6 +17,7 @@
 void TestApplication(void);
 enum Status CheckValuesUsingEnumStatus(uint8_t value);
 Status_t CheckValuesUsingStatus_t(uint8_t value);
+Status_t CopySenorData(Sensor_t sourceSensor, Sensor_t* targetSensor);
 
 
 #endif /* INC_APPLICATION_H_ */
