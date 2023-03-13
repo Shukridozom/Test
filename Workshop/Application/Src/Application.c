@@ -14,6 +14,9 @@ Status_t status2;
 Int8Bit varInt8Bit = 10;
 uint8_t var8Bit = 0;
 
+
+Sensor_Unit_t unit1 = {0}, unit2 = {0};
+
 //---------------------------------------------------
 enum Status CheckValuesUsingEnumStatus(uint8_t value)
 {
@@ -49,6 +52,19 @@ Status_t CopySenorData(Sensor_t sourceSensor, Sensor_t* targetSensor)
 
 	return Status_Ok;
 }
+//---------------------------------------------------
+Status_t CopyUnitData(Sensor_Unit_t sourceUnit, Sensor_Unit_t* targetUnit)
+{
+	if(targetUnit == NULL)
+		return Status_Error;
+
+	targetUnit->Sensor1.acceleration = sourceUnit.Sensor1.acceleration;
+	targetUnit->Sensor1.pressure = sourceUnit.Sensor1.pressure;
+
+	targetUnit->Sensor2 = sourceUnit.Sensor2;
+
+	return Status_Ok;
+}
 
 //---------------------------------------------------
 void ApplicationTest(void)
@@ -58,6 +74,14 @@ void ApplicationTest(void)
 
 	status1 = CheckValuesUsingEnumStatus(var8Bit);
 	status2 = CheckValuesUsingStatus_t(200);
+
+
+	unit1.Sensor1.acceleration = 10;
+	unit1.Sensor1.pressure = 20;
+	unit1.Sensor2.acceleration = 30;
+	unit1.Sensor2.pressure = 40;
+
+	CopyUnitData(unit1, &unit2);
 }
 
 
