@@ -5,20 +5,19 @@
  *      Author: User
  */
 
-#include "DataTypes.h"
-
 #ifndef INC_APPLICATION_H_
 #define INC_APPLICATION_H_
 
-#define MIN_VALUE	10
-#define MAX_VALUE	100
+typedef enum
+{
+	Status_OK = 0,
+	Status_WrongInputParameter,
+	Status_Timeout,
+	Status_Error
+}Status_t;
 
 
-void ApplicationTest(void);
-enum Status CheckValuesUsingEnumStatus(uint8_t value);
-Status_t CheckValuesUsingStatus_t(uint8_t value);
-Status_t CopySenorData(Sensor_t sourceSensor, Sensor_t* targetSensor);
-Status_t CopyUnitData(Sensor_Unit_t sourceUnit, Sensor_Unit_t* targetUnit);
+Status_t API_1(uint8_t value, uint8_t* pData);
 
 
 #endif /* INC_APPLICATION_H_ */

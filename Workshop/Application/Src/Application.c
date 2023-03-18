@@ -5,83 +5,107 @@
  *      Author: User
  */
 
+//API: Application Programming Interface
+
+// output result
+// asserting parameters [data validation]
+
 #include "stm32g0xx_hal.h"
 #include "Application.h"
 
-enum Status status1;
-Status_t status2;
+static Status_t Step1(void);
+static Status_t Step2(void);
+static Status_t Step3(void);
+static Status_t Step4(void);
+static Status_t Step5WithTimeout(uint32_t timeout);
+static uint8_t flag = 0;
 
-Int8Bit varInt8Bit = 10;
-uint8_t var8Bit = 0;
 
-
-Sensor_Unit_t unit1 = {0}, unit2 = {0};
-
-//---------------------------------------------------
-enum Status CheckValuesUsingEnumStatus(uint8_t value)
+Status_t API_1(uint8_t value, uint8_t* pData)
 {
-	enum Status status;
-	if(value >= MIN_VALUE && value <= MAX_VALUE)
-		status = Temp_Status_Ok;
-	else
-		status = Temp_Status_Error;
+	Status_t status = Status_OK;
+	if(pData == NULL)
+		return Status_Error;
+
+	status = Step1(); // Step1() function in Application.c file
+	if(status == Status_Error)
+		return Status_Error;
+
+	status = Step2();
+	if(status == Status_Error)
+		return Status_Error;
+
+	status = Step3();
+	if(status == Status_Error)
+		return Status_Error;
+
+	status = Step4();
+	if(status != Status_OK)
+		return Status_Error;
+
+
+	status = Step5WithTimeout(100);
+	if(status == Status_Timeout)
+		return status;
+
 
 	return status;
 }
 
-//---------------------------------------------------
-Status_t CheckValuesUsingStatus_t(uint8_t value)
+
+
+static Status_t Step5WithTimeout(uint32_t timeout)
 {
-	Status_t status;
-	if(value >= MIN_VALUE && value <= MAX_VALUE)
-		status = Status_Ok;
-	else
-		status = Status_Error;
+	const uint32_t maxValue = 0xFFFFFFFF;
+	uint32_t tickstart = HAL_GetTick();
+	uint32_t currentTick = HAL_GetTick();
+	uint32_t compareValue = 0;
+	Status_t status = Status_OK;
+
+
+	while(compareValue < timeout)
+	{
+		status = Status_Timeout;
+		currentTick = HAL_GetTick();
+
+		if(currentTick > tickstart)
+			compareValue = currentTick - tickstart;
+		else
+			compareValue = currentTick - tickstart + maxValue;
+
+
+		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET)
+		{
+			//Implementation
+			status = Status_OK;
+			break;
+		}
+	}
 
 	return status;
+
 }
 
-//---------------------------------------------------
-Status_t CopySenorData(Sensor_t sourceSensor, Sensor_t* targetSensor)
+static Status_t Step1(void)
 {
-	if(targetSensor == NULL)
-		return Status_Error;
-
-	targetSensor->acceleration = sourceSensor.acceleration;
-	targetSensor->pressure = sourceSensor.pressure;
-
-	return Status_Ok;
+	return Status_OK;
 }
-//---------------------------------------------------
-Status_t CopyUnitData(Sensor_Unit_t sourceUnit, Sensor_Unit_t* targetUnit)
+
+static Status_t Step2(void)
 {
-	if(targetUnit == NULL)
-		return Status_Error;
-
-	targetUnit->Sensor1.acceleration = sourceUnit.Sensor1.acceleration;
-	targetUnit->Sensor1.pressure = sourceUnit.Sensor1.pressure;
-
-	targetUnit->Sensor2 = sourceUnit.Sensor2;
-
-	return Status_Ok;
+	return Status_OK;
 }
 
-//---------------------------------------------------
-void ApplicationTest(void)
+static Status_t Step3(void)
 {
-
-	var8Bit = varInt8Bit + 20;
-
-	status1 = CheckValuesUsingEnumStatus(var8Bit);
-	status2 = CheckValuesUsingStatus_t(200);
-
-
-	unit1.Sensor1.acceleration = 10;
-	unit1.Sensor1.pressure = 20;
-	unit1.Sensor2.acceleration = 30;
-	unit1.Sensor2.pressure = 40;
-
-	CopyUnitData(unit1, &unit2);
+	return Status_OK;
 }
+
+static Status_t Step4(void)
+{
+	return Status_OK;
+}
+
+
 
 

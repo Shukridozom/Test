@@ -27,6 +27,10 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+uint8_t Step1(uint8_t value)
+{
+	return ++value;
+}
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -83,7 +87,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-  ApplicationTest();
+
+  uint8_t value1 = 10;
+  uint8_t array[10] = {0};
+  if(API_1(value1, array) == Status_Timeout)
+  {
+	  //Do something
+	  Step1(10); // Step1() function in main.c file
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
